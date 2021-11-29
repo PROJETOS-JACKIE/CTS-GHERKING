@@ -1,0 +1,324 @@
+ ...titiva/src/test/resources/com/cortex/e2e/cypress/integration/features/admin/admin.feature 
+Feature: Controle de usuários
+
+    Background: Estar logado e na página de admin
+        Given faço login via HTTP request com o usuário "root"
+        And estou na página de admin
+
+    Scenario: Verificar tipos de usuários
+        Given acesso a aba de "Usuários"
+        And clico no botão "Adicionar usuário"
+        Then verifico todos os tipos de usuários aparecem no select box "Usuário;Administrador;Root;Usuário integrado;Administrador integrado;Root integrado;Usuário Cortex;Administrador Cortex;Root Cortex"
+        And fecho o modal
+
+    Scenario: Criar Perfil
+        Given acesso a aba de "Perfis"
+        And clico no botão "Novo Perfil"
+        And preencho o campo "name" com o texto "Perfil 01"
+        And marco o checkbox Permitir exportação de dados
+        And marco o checkbox Permitir importação de dados
+        And clico no botão "Salvar"
+        Then verifico se o item "Perfil 01" foi criado na tabela
+
+    Scenario: Tentar criar Perfil que já existe
+        Given acesso a aba de "Perfis"
+        And clico no botão "Novo Perfil"
+        And preencho o campo "name" com o texto "Perfil 02"
+        And clico no botão "Salvar"
+        And clico no botão "Novo Perfil"
+        And preencho o campo "name" com o texto "Perfil 02"
+        And clico no botão "Salvar"
+        Then verifico se a mensagem do warning está correta "Já existe um perfil chamado Perfil 02. Por favor, escolha outro nome."
+        And clico no botão "OK"
+        And preencho o campo "name" com o texto "Perfil 03"
+        And clico no botão "Salvar"
+        And verifico se o item "Perfil 03" foi criado na tabela
+
+    Scenario: Remover Perfil
+        Given acesso a aba de "Perfis"
+        And clico no botão "Novo Perfil"
+        And preencho o campo "name" com o texto "Remover Perfil"
+        And marco o checkbox Permitir exportação de dados
+        And marco o checkbox Permitir importação de dados
+        And clico no botão "Salvar"
+        And seleciono o item "Remover Perfil"
+        And clico no botão "Remover"
+        Then verifico se a mensagem do warning está correta "Realmente deseja remover o item Remover Perfil?"
+        And clico no botão "Sim"
+        And verifico se o item "Remover Perfil" foi removido
+
+    Scenario: Criar Grupo
+        Given acesso a aba de "Grupos"
+        And clico no botão "Novo Grupo"
+        And preencho o campo "name" com o texto "Grupo 01"
+        And clico no botão "Salvar"
+        Then verifico se o item "Grupo 01" foi criado na tabela
+
+    Scenario: Tentar criar Grupo que já existe
+        Given acesso a aba de "Grupos"
+        And clico no botão "Novo Grupo"
+        And preencho o campo "name" com o texto "Grupo 02"
+        And clico no botão "Salvar"
+        And clico no botão "Novo Grupo"
+        And preencho o campo "name" com o texto "Grupo 02"
+        And clico no botão "Salvar"
+        Then verifico se a mensagem do warning está correta "Já existe um grupo chamado Grupo 02. Por favor, escolha outro nome."
+        And clico no botão "OK"
+        And preencho o campo "name" com o texto "Grupo 03"
+        And clico no botão "Salvar"
+        And verifico se o item "Grupo 03" foi criado na tabela
+
+    Scenario: Remover Grupo
+        Given acesso a aba de "Grupos"
+        And clico no botão "Novo Grupo"
+        And preencho o campo "name" com o texto "Remover Grupo"
+        And clico no botão "Salvar"
+        And seleciono o item "Remover Grupo"
+        And clico no botão "Remover"
+        Then verifico se a mensagem do warning está correta "Realmente deseja remover o item Remover Grupo?"
+        And clico no botão "Sim"
+        And verifico se o item "Remover Grupo" foi removido
+
+    Scenario: Criar um novo usuário
+        Given acesso a aba de "Usuários"
+        And clico no botão "Adicionar usuário"
+        And seleciono o tipo "Usuário"
+        And preencho o campo "login" com o texto "login_do_usuario"
+        And preencho o campo "name" com o texto "Nome do usuário"
+        And preencho o campo "email" com o texto "email_do_usuario@nome.usuario.com.br"
+        And seleciono o grupo "Grupo 01"
+        And seleciono o perfil "Perfil 01"
+        And clico no botão "Salvar"
+        And verifico se o usuário com o login "login_do_usuario" foi criado na tabela
+
+    Scenario: Tentar criar um usuário que já existe
+        Given acesso a aba de "Usuários"
+        And clico no botão "Adicionar usuário"
+        And seleciono o tipo "Usuário"
+        And preencho o campo "login" com o texto "usuario_existente"
+        And preencho o campo "name" com o texto "Nome do usuário"
+        And preencho o campo "email" com o texto "usuario_existente@existente.com.br"
+        And seleciono o grupo "Grupo 01"
+        And seleciono o perfil "Perfil 01"
+        And clico no botão "Salvar"
+        And clico no botão "Adicionar usuário"
+        And seleciono o tipo "Usuário"
+        And preencho o campo "login" com o texto "usuario_existente"
+        And preencho o campo "name" com o texto "Nome do usuário"
+        And preencho o campo "email" com o texto "usuario_existente@existente.com.br"
+        And seleciono o grupo "Grupo 01"
+        And seleciono o perfil "Perfil 01"
+        And clico no botão "Salvar"
+        Then verifico se a mensagem do warning está correta "Usuário usuario_existente já existe. Por favor, escolha outro login."
+        And clico no botão "OK"
+        And preencho o campo "login" com o texto "novo_usuario"
+        And clico no botão "Salvar"
+        And verifico se o usuário com o login "novo_usuario" foi criado na tabela
+
+    Scenario: Criar um novo usuário Cortex
+        Given acesso a aba de "Usuários"
+        And clico no botão "Adicionar usuário"
+        And seleciono o tipo "Usuário Cortex"
+        And preencho o campo "login" com o texto "cortex_user"
+        And preencho o campo "name" com o texto "Usuário Cortex"
+        And preencho o campo "email" com o texto "email@cortex-intelligence.com"
+        And seleciono o grupo "Grupo 01"
+        And seleciono o perfil "Perfil 01"
+        And clico no botão "Salvar"
+        And verifico se o usuário com o login "login_do_usuario" foi criado na tabela
+
+    Scenario: Validar mensagem de erro ao tentar cadastrar usuário cortex com e-mail externo
+        Given acesso a aba de "Usuários"
+        And clico no botão "Adicionar usuário"
+        And seleciono o tipo "Usuário Cortex"
+        And preencho o campo "email" com o texto "email@teste.com"
+        And verifico se a mensagem de erro "Somente o domínio @cortex-intelligence.com é permitido para usuários Cortex." aparece no tooltip do campo e-mail
+        And fecho o modal
+ 113  ...petitiva/src/test/resources/com/cortex/e2e/cypress/support/pages/admin/admin_page.spec.js 
+@@ -0,0 +1,113 @@
+///<reference types="Cypress"/>
+
+const LOCATORS = {
+    cy_tab_by_text: '.x-tab-strip-text:contains("$tabText")',
+    cy_btn_by_text: '.x-btn-text:contains("$btnText"):visible',
+    cy_field_name: '[name="$fieldName"]',
+    cy_check_allow_export: '[name="allowDataExport"]',
+    cy_check_allow_import: '[name="allowDataImport"]',
+    cy_table_item_name: '.x-grid3-col-1:visible:nth(0)',
+    cy_warning_message: '.ext-mb-text',
+    cy_combo_user_type: '[name="properties"]',
+    cy_combo_user_type_items: '[data-tooltip="$itemText"]',
+    cy_combo_user_group: '.x-form-trigger.trigger-arrow ',
+    cy_combo_user_profile: '.x-form-trigger-svg:nth(2)',
+    cy_data_tooltip: '[data-tooltip="$tooltip"]',
+    cy_table_login: '.x-grid3-col-3',
+    cy_modal_close: '.x-tool-close:visible',
+    cy_table_item_by_name: '.x-grid3-col-1:contains("$ItemName")',
+    cy_table_items: '.x-grid3-col-1:visible',
+    cy_btn_refresh: '.icon-refresh-grid:nth(1)',
+    cy_tab_name: '.x-tab-strip-text:nth($order)'
+
+};
+
+class AdminPage {
+    verifyArea() {
+        cy.url().then(url => {
+            if (!url.includes('#/user/root.administration/home')) {
+                cy.visit('/#/user/root.administration/home');
+                cy.reload();
+                cy.get(LOCATORS.cy_tab_name.replace("$order", '0')).should('contain.text', 'Usuários');
+                cy.get(LOCATORS.cy_tab_name.replace("$order", '1')).should('contain.text', 'Grupos');
+                cy.get(LOCATORS.cy_tab_name.replace("$order", '2')).should('contain.text', 'Perfis');
+            }
+        });
+    }
+
+    accessTabByText(tabText) {
+        cy.get(LOCATORS.cy_tab_by_text.replace("$tabText", tabText)).should('be.visible').click();
+    }
+
+    clickButtonByText(btnText) {
+        cy.get(LOCATORS.cy_btn_by_text.replace("$btnText", btnText)).click();
+    }
+
+    typeTextByFieldName(fieldName, text) {
+        cy.get(LOCATORS.cy_field_name.replace("$fieldName", fieldName)).clear().type(text);
+    }
+
+    checkAllowDataExport() {
+        cy.get(LOCATORS.cy_check_allow_export).click();
+    }
+
+    checkAllowDataImport() {
+        cy.get(LOCATORS.cy_check_allow_import).click();
+    }
+
+    findTableItemNameBytext(itemName) {
+        cy.get(LOCATORS.cy_table_item_name).should('have.text', itemName);
+    }
+
+    verifyWarningMsg(warningText) {
+        cy.get(LOCATORS.cy_warning_message).should('contain.text', warningText);
+    }
+
+    selectUserTypeByText(userType) {
+        cy.get(LOCATORS.cy_combo_user_type).click();
+        cy.get(LOCATORS.cy_combo_user_type_items.replace("$itemText", userType)).click();
+    }
+
+    selectUserGroupByText(userGroup) {
+        cy.get(LOCATORS.cy_combo_user_group).click();
+        cy.get(LOCATORS.cy_data_tooltip.replace("$tooltip", userGroup)).click();
+        cy.get(LOCATORS.cy_combo_user_group).click();
+    }
+
+    selectUserProfileByText(userProfile) {
+        cy.get(LOCATORS.cy_combo_user_profile).click();
+        cy.get(LOCATORS.cy_data_tooltip.replace("$tooltip", userProfile)).click();
+    }
+
+    findTableUserLoginBytext(login) {
+        cy.get(LOCATORS.cy_table_login).should('contain.text', login);
+    }
+
+    verifyUsersTypeExists(typesList) {
+        cy.get(LOCATORS.cy_combo_user_type).click();
+        const types = typesList.split(';')
+        for (let type of types) {
+            cy.get(LOCATORS.cy_data_tooltip.replace("$tooltip", type)).should('be.visible');
+        }
+    }
+
+    closeModal() {
+        cy.get(LOCATORS.cy_modal_close).click();
+    }
+
+    verifyEmailErrorTooltipText(errorMsg) {
+        cy.get(LOCATORS.cy_field_name.replace("$fieldName", 'email')).should('have.attr', 'data-tooltip', errorMsg);
+    }
+
+    selectTableItemByName(itemName) {
+        cy.get(LOCATORS.cy_table_item_by_name.replace("$ItemName", itemName)).click();
+    }
+
+    verifyTableItemNotExist(itemName) {
+        cy.get(LOCATORS.cy_btn_refresh).click({ force: true });
+        cy.get(LOCATORS.cy_table_item_by_name.replace("$ItemName", itemName)).should('not.exist');
+    }
+}
+
+const adminPage = new AdminPage();
+export default adminPage;
+ 71  .../competitiva/src/test/resources/com/cortex/e2e/cypress/support/steps/admin/admin_steps.js 
+@@ -0,0 +1,71 @@
+/* global Given, Then, When, And */
+
+import adminPage from '../../pages/admin/admin_page.spec'
+
+When('estou na página de admin', () => {
+    adminPage.verifyArea();
+});
+
+Given('acesso a aba de {string}', (tabText) => {
+    adminPage.accessTabByText(tabText);
+})
+
+When('clico no botão {string}', (btnText) => {
+    adminPage.clickButtonByText(btnText);
+})
+
+When('preencho o campo {string} com o texto {string}', (fieldName, text) => {
+    adminPage.typeTextByFieldName(fieldName, text);
+})
+
+When('marco o checkbox Permitir exportação de dados', () => {
+    adminPage.checkAllowDataExport();
+})
+
+When('marco o checkbox Permitir importação de dados', () => {
+    adminPage.checkAllowDataImport();
+})
+
+When('fecho o modal', () => {
+    adminPage.closeModal();
+})
+
+Then('verifico se o item {string} foi criado na tabela', (itemName) => {
+    adminPage.findTableItemNameBytext(itemName);
+})
+
+Then('verifico se a mensagem de erro {string} aparece no tooltip do campo e-mail', (errorMsg) => {
+    adminPage.verifyEmailErrorTooltipText(errorMsg);
+})
+
+Then('verifico se o usuário com o login {string} foi criado na tabela', (login) => {
+    adminPage.findTableUserLoginBytext(login);
+})
+
+Then('verifico todos os tipos de usuários aparecem no select box {string}', (typesList) => {
+    adminPage.verifyUsersTypeExists(typesList);
+})
+
+Then('verifico se a mensagem do warning está correta {string}', (warningText) => {
+    adminPage.verifyWarningMsg(warningText);
+})
+
+When('seleciono o tipo {string}', (userType) => {
+    adminPage.selectUserTypeByText(userType);
+})
+
+When('seleciono o grupo {string}', (userGroup) => {
+    adminPage.selectUserGroupByText(userGroup);
+})
+
+When('seleciono o perfil {string}', (userProfile) => {
+    adminPage.selectUserProfileByText(userProfile);
+})
+
+When('seleciono o item {string}', (itemName) => {
+    adminPage.selectTableItemByName(itemName);
+})
+
+When('verifico se o item {string} foi removido', (itemName) => {
+    adminPage.verifyTableItemNotExist(itemName);
+}) 

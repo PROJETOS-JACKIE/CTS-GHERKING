@@ -1,0 +1,15 @@
+1) PASSO A PASSO
+Onde + Criar feature
+\CYPRESS\FEATURES\INDICE\new_indice.feature
+
+# Antes de começar o teste tem que executar o Background Acessar aplicação - LOGIN 
+Background: Acessar aplicação
+        When acesso à aplicação
+        And faço login com o usuário "root"
+        And estou na página inicial da aplicação
+		
+#Definir o caminho até o índice - CRIAR ÍNDICE
+		
+		
+
+Preenchimento dos campos da Issue  +
